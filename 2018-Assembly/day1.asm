@@ -19,6 +19,7 @@
 
         mov     [total], rcx
         mov     rdi, [total]
+
         call    itoa
         mov     rsi, itoa_result_str
         call    print
