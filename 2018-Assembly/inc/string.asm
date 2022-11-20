@@ -1,7 +1,10 @@
-    ; Include file containing helper functions
-    ; By Craig Brennan 2022
+; Include file containing helper functions
+; By Craig Brennan 2022
 
-    ; Print contents of byte at [rsi]
+%ifndef STRING_ASM
+    %define STRING_ASM
+
+    ; Print contents of bytes from [rsi]
     ; Note: The string length is fixed
     print:
         mov       rax, 1                  ; system call for write
@@ -27,13 +30,14 @@
         add rax, 30h                      ; convert to ascii char
         mov [r10], rax                    ; store in string
         mov rdi, rdx                      ; remainder becomes new number
-        cmp r11, 0
-        jz .done
-        dec r11
-        dec rbx
         inc r10                           ; increment string pointer
+        test r11, r11                     ; test r11 and set zf accordingly
+        jz .done
+        dec r11                           ; decrement loop counter
+        dec rbx                           ; decrement divisor
         jmp .loop
     .done:
+        mov [r10], byte 0                 ; null terminate string
         ret
 
     ; Take int64 in r9 and return 10^r9 in rax
@@ -49,3 +53,5 @@
         jmp .multiply_loop
     .done:
         ret
+
+%endif

@@ -41,3 +41,21 @@
     section .bss
         total           resq 1
         itoa_result_str resb 20
+
+; Register usage
+; rax - Caller-saved register, Function return values
+; rbx - Function-saved register
+; rcx - Caller-saved register, Function parameter 4
+; rdx - Caller-saved register, Function parameter 3
+; rdi - Caller-saved register, Function parameter 1
+; rsi - Caller-saved register, Function parameter 2
+; rbp - Function-saved register
+; rsp - Caller-saved register
+; r8  - Caller-saved register, Function parameter 5
+; r9  - Caller-saved register, Function parameter 6
+; r10 - Caller-saved register
+; r11 - Caller-saved register
+; r12 - Function-saved register
+; r13 - Function-saved register
+; r14 - Function-saved register
+; r15 - Function-saved register
