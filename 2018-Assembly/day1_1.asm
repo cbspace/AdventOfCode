@@ -17,13 +17,11 @@
         cmp     r12, r13
         jne     .add_loop
 
-        mov     [total], rbx      ; save total
-        mov     rsi, [total]      ; load total
-
+        mov     rsi, rbx          ; load total
         call    int_to_string
+
         mov     rsi, result_str
         call    print
-
         mov     rsi, newline
         call    print
 
@@ -41,7 +39,6 @@
         newline:    db 10
     
     section .bss
-        total       resq 1
         result_str  resb 20
 
 ; Register usage
