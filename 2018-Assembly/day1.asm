@@ -33,8 +33,10 @@
         syscall                   ; invoke operating system to exit
 
     section .data
-        ;Let's do the simple example of 4 numbers
-        numbers:    dq 10, 20, 30, 63
+        ; This is a bit of a hack, adding the (reformatted) input file
+        ; as an include. The next step is to open the file using assembley!
+        numbers:
+        %include "day1_input.txt"
         length:     equ $-numbers
         newline:    db 10
     
