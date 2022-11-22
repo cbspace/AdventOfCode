@@ -5,17 +5,15 @@
     %define STRING_ASM
 
     ; Print contents of bytes from [rsi]
-    ; Note: The string length is fixed
+    ; Number of bytes in rdx
     print:
         mov     rax, 1            ; system call for write
         mov     rdi, 1            ; file handle 1 is stdout
-        mov     rdx, 20            ; number of bytes
         syscall
         ret
 
     ; Integer to string: Convert int64 at rsi to string
     ; and save in result_str - currently positive ints only
-    ; Note the string length is fixed at 3 digits
     int_to_string:
         mov     rbx, 19           ; 2 means 10^19 divisor or 0 - 9.99e19 range
         mov     rdi, 0            ; 0 means no digits reached yet
@@ -29,12 +27,12 @@
         mov     rax, rsi          ; load low reg
         div     rcx               ; rax: quotient, rdx: remainder
         add     rdi, rax          ; add quotient with leading zero flag
-        jz      .leading_zero     ; digit is leading zero so don't save it
+        jz      .skip_write       ; digit is leading zero so don't save it
         add     rax, 30h          ; convert to ascii char
         mov     [r10], rax        ; store in string
         inc     r10               ; increment string pointer
         mov     rdi, 1            ; set flag to 1 as no more leading zeros
-    .leading_zero:
+    .skip_write:
         mov     rsi, rdx          ; remainder becomes new number
         test    r11, r11          ; test r11 and set zf accordingly
         jz      .done
@@ -42,7 +40,9 @@
         dec     rbx               ; decrement divisor
         jmp     .loop
     .done:
-        mov     [r10], byte 0     ; null terminate string
+        mov     rcx, r10          ; load pointer to end of string
+        sub     rcx, result_str   ; calculate string length
+        mov     [result_str_len], rcx   ; populate string length
         ret
 
     ; Take int64 in r9 and return 10^r9 in rax
