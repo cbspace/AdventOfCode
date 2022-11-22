@@ -47,17 +47,18 @@
 
     ; search array and return 1 in rax if found
     search_array:
+        test      rbp, rbp              ; is the array empty?
+        jz        .not_found            ; yes so leave
         xor       r10, r10              ; counter = 0
         mov       r11, freq_array       ; pointer to array
     .loop:
-        cmp       r10, rbp              ; are we at the end of array?
-        je        .not_found            ; yes we are so leave
         mov       r8, [r11]             ; load array value
         cmp       r8, rbx               ; compare to input value
         je        .found
         add       r10, 8                ; increase counter
         add       r11, 8                ; increase pointer
-        jmp       .loop
+        cmp       r10, rbp              ; are we at the end of array?
+        jne       .loop                 ; no, keep going
     .not_found:
         mov       rax, 0                ; not found, return 0
         ret
@@ -68,7 +69,7 @@
     section .data
         ; This is a bit of a hack, adding the (reformatted) input file
         ; as an include. The next step is to open the file using assembley!
-        numbers:    dq 3, 3, 4, -2, -4
+        ;numbers:    dq 3, 3, 4, -2, -4
         ;numbers:
         ;%include "day1_input.txt"
         length:     equ $-numbers
