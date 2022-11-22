@@ -5,29 +5,30 @@
     %include "string.asm"
 
     _start:
-        mov     rbx, 0            ; total
-        mov     rbp, numbers      ; pointer to number to write
-        mov     r12, length       ; length of input array
-        xor     r13, r13          ; counter
+        mov     rbx, 0                  ; total
+        mov     [freq_array_len], rbx   ; initialise array len
+        mov     rbp, numbers            ; pointer to number
+        mov     r12, length             ; length of input array
+        xor     r13, r13                ; counter
     
     .add_loop:
         add     rbx, [rbp]
-        add     rbp, 8            ; move pointer
-        add     r13, 8            ; increment counter
+        add     rbp, 8                  ; move pointer
+        add     r13, 8                  ; increment counter
 
-        mov     rsi, rbx          ; load total
+        mov     rsi, rbx                ; load total
         call    int_to_string
 
         mov     rsi, result_str
         call    println
-        
+
         cmp     r12, r13
         jne     .add_loop
 
     .exit:
-        mov       rax, 60         ; system call for exit
-        xor       rdi, rdi        ; exit code 0
-        syscall                   ; invoke operating system to exit
+        mov       rax, 60               ; system call for exit
+        xor       rdi, rdi              ; exit code 0
+        syscall                         ; invoke operating system to exit
 
     section .data
         ; This is a bit of a hack, adding the (reformatted) input file
