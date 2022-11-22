@@ -9,15 +9,16 @@
     print:
         mov     rax, 1            ; system call for write
         mov     rdi, 1            ; file handle 1 is stdout
-        mov     rdx, 3            ; number of bytes
+        mov     rdx, 20            ; number of bytes
         syscall
         ret
 
     ; Integer to string: Convert int64 at rsi to string
-    ; and save in result_str - currently signed only
+    ; and save in result_str - currently positive ints only
     ; Note the string length is fixed at 3 digits
     int_to_string:
-        mov     rbx, 2            ; 2 means 10^2 divisor or 0 - 999 range
+        mov     rbx, 19           ; 2 means 10^19 divisor or 0 - 9.99e19 range
+        mov     rdi, 0            ; 0 means no digits reached yet
         mov     r10, result_str   ; pointer to string
     .loop:
         mov     r11, rbx          ; loop limit to r11
@@ -27,10 +28,14 @@
         mov     rdx, 0            ; reset rdx (high reg)
         mov     rax, rsi          ; load low reg
         div     rcx               ; rax: quotient, rdx: remainder
+        add     rdi, rax          ; add quotient with leading zero flag
+        jz      .leading_zero     ; digit is leading zero so don't save it
         add     rax, 30h          ; convert to ascii char
         mov     [r10], rax        ; store in string
-        mov     rsi, rdx          ; remainder becomes new number
         inc     r10               ; increment string pointer
+        mov     rdi, 1            ; set flag to 1 as no more leading zeros
+    .leading_zero:
+        mov     rsi, rdx          ; remainder becomes new number
         test    r11, r11          ; test r11 and set zf accordingly
         jz      .done
         dec     r11               ; decrement loop counter

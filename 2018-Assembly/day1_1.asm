@@ -23,7 +23,7 @@
         mov     rsi, result_str
         call    print
         mov     rsi, newline
-        call    print
+        ;call    print
 
     .exit:
         mov       rax, 60         ; system call for exit
@@ -39,7 +39,7 @@
         newline:    db 10
     
     section .bss
-        result_str  resb 20
+        result_str  resb 21
 
 ; Register usage
 ; rax - Caller-saved register, Function return values
