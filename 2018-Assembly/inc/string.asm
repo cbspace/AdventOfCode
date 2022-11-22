@@ -5,7 +5,19 @@
     %define STRING_ASM
 
     ; Print contents of bytes from [rsi]
-    ; Number of bytes in rdx
+    ; Number of bytes (str len) at [rsi-8]
+    ; println adds newline character
+    println:
+        mov     rax, 1            ; system call for write
+        mov     rdi, 1            ; file handle 1 is stdout
+        mov     rdx, [rsi - 8]
+        syscall
+        mov     rax, 1            ; system call for write
+        mov     rdx, 1            ; string length is 1
+        mov     rsi, newline      ; newline character
+        syscall
+        ret
+
     print:
         mov     rax, 1            ; system call for write
         mov     rdi, 1            ; file handle 1 is stdout

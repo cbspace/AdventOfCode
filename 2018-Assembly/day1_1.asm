@@ -21,11 +21,7 @@
         call    int_to_string
 
         mov     rsi, result_str
-        mov     rdx, [result_str_len]
-        call    print
-        mov     rdx, 1
-        mov     rsi, newline
-        call    print
+        call    println
 
     .exit:
         mov       rax, 60         ; system call for exit
@@ -41,8 +37,9 @@
         newline:    db 10
     
     section .bss
-        result_str      resb 21
-        result_str_len  resb 1
+        ; For simplicity this section is aligned @ 8 bytes!
+        result_str_len  resq 1
+        result_str      resb 24
 
 ; Register usage
 ; rax - Caller-saved register, Function return values
