@@ -26,7 +26,7 @@
 
     ; Integer to string: Convert int64 at rsi to string and save in result_str
     int_to_string:
-        mov     rbx, 19                 ; 2 means 10^19 divisor or 0 - 9.99e19 range
+        mov     r8, 19                  ; 19 means 10^19 divisor or 0 - 9.99e19 range
         mov     rdi, 0                  ; 0 means no digits reached yet
         mov     r10, result_str         ; pointer to string
         cmp     rsi, -1                 ; compare number to -1
@@ -36,7 +36,7 @@
         mov     [r10], rax              ; store in string
         inc     r10                     ; increment string pointer
     .loop:
-        mov     r11, rbx                ; loop limit to r11
+        mov     r11, r8                 ; loop limit to r11
         mov     r9, r11                 ; divisor exponent to r9
         call    pow10                   ; get the divisor
         mov     rcx, rax                ; divisor to rcx
@@ -54,7 +54,7 @@
         test    r11, r11                ; test r11 and set zf accordingly
         jz      .done
         dec     r11                     ; decrement loop counter
-        dec     rbx                     ; decrement divisor
+        dec     r8                     ; decrement divisor
         jmp     .loop
     .done:
         mov     rcx, r10                ; load pointer to end of string
@@ -65,12 +65,12 @@
     ; Take int64 in r9 and return 10^r9 in rax
     ; Fixme - return 0 on overflow
     pow10:
-        mov     r8, 10
+        mov     rcx, 10
         mov     rax, 1
     .multiply_loop:
         cmp     r9, 0
         jz      .done
-        mul     r8                      ; rax = rax * r8
+        mul     rcx                      ; rax = rax * r8
         dec     r9
         jmp     .multiply_loop
     .done:
