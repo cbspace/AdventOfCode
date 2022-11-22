@@ -8,13 +8,13 @@
         mov     rbx, 0                  ; total
         mov     r12, length             ; length of input array
         mov     r14, freq_array         ; pointer to freq_array
-        mov     r15, 0                  ; freq_array_length
+        mov     rbp, 0                  ; freq_array_length
     .loop_init:
-        mov     rbp, numbers            ; pointer to number
+        mov     r15, numbers            ; pointer to number
         xor     r13, r13                ; counter
     .add_loop:
-        add     rbx, [rbp]              ; increase total
-        add     rbp, 8                  ; move pointer
+        add     rbx, [r15]              ; increase total
+        add     r15, 8                  ; move pointer
         add     r13, 8                  ; increment counter
 
         call    search_array            ; check if number is in array
@@ -23,7 +23,7 @@
 
         mov     [r14], rbx              ; store total in array
         add     r14, 8                  ; move pointer
-        add     r15, 8                  ; increment counter
+        add     rbp, 8                  ; increment array length
 
         ; mov     rsi, rbx                ; temp print
         ; call    int_to_string
@@ -50,7 +50,7 @@
         xor       r10, r10              ; counter = 0
         mov       r11, freq_array       ; pointer to array
     .loop:
-        cmp       r10, r15              ; are we at the end of array?
+        cmp       r10, rbp              ; are we at the end of array?
         je        .not_found            ; yes we are so leave
         mov       r8, [r11]             ; load array value
         cmp       r8, rbx               ; compare to input value
@@ -69,6 +69,7 @@
         ; This is a bit of a hack, adding the (reformatted) input file
         ; as an include. The next step is to open the file using assembley!
         numbers:    dq 3, 3, 4, -2, -4
+        ;numbers:
         ;%include "day1_input.txt"
         length:     equ $-numbers
         newline:    db 10
