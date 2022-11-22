@@ -24,12 +24,17 @@
         syscall
         ret
 
-    ; Integer to string: Convert int64 at rsi to string
-    ; and save in result_str - currently positive ints only
+    ; Integer to string: Convert int64 at rsi to string and save in result_str
     int_to_string:
         mov     rbx, 19           ; 2 means 10^19 divisor or 0 - 9.99e19 range
         mov     rdi, 0            ; 0 means no digits reached yet
         mov     r10, result_str   ; pointer to string
+        cmp     rsi, -1           ; compare number to -1
+        jg      .loop             ; if number is positive go to loop
+        neg     rsi               ; make number positive
+        mov     rax, '-'          ; load minus character
+        mov     [r10], rax        ; store in string
+        inc     r10               ; increment string pointer
     .loop:
         mov     r11, rbx          ; loop limit to r11
         mov     r9, r11           ; divisor exponent to r9
