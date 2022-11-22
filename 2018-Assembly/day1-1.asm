@@ -6,7 +6,7 @@
 
     _start:
         mov     rbx, 0            ; total
-        mov     rbp, numbers      ; pointer to number to write
+        mov     rbp, numbers      ; pointer to number
         mov     r12, length       ; length of input array
         xor     r13, r13          ; counter
     

@@ -6,24 +6,27 @@
 
     _start:
         mov     rbx, 0                  ; total
-        mov     [freq_array_len], rbx   ; initialise array len
         mov     rbp, numbers            ; pointer to number
         mov     r12, length             ; length of input array
         xor     r13, r13                ; counter
+        mov     r14, freq_array         ; pointer to freq_array
+        mov     r15, 0                  ; freq_array_length
+        ;mov     [freq_array_len], r15   ; initialise array len
     
     .add_loop:
-        add     rbx, [rbp]
+        add     rbx, [rbp]              ; increase total
         add     rbp, 8                  ; move pointer
         add     r13, 8                  ; increment counter
+        mov     
 
         mov     rsi, rbx                ; load total
-        call    int_to_string
+        call    int_to_string           ; convert to string
 
-        mov     rsi, result_str
-        call    println
+        mov     rsi, result_str         ; load string
+        call    println                 ; print
 
-        cmp     r12, r13
-        jne     .add_loop
+        cmp     r12, r13                ; test if end of list
+        jne     .add_loop               ; start loop again
 
     .exit:
         mov       rax, 60               ; system call for exit
@@ -42,7 +45,7 @@
         ; For simplicity this section is aligned @ 8 bytes!
         result_str_len  resq 1
         result_str      resb 24
-        freq_array_len  resq 1
+        ;freq_array_len  resq 1
         freq_array      resq 1000
 
 ; Register usage
