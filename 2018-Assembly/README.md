@@ -6,6 +6,6 @@ The NASM assembler: `sudo apt install nasm`
 
 LD linker: `sudo apt install build-essential`
 
-To build and run (e.g Day1.asm):
+To build and run (e.g day1-1.asm):
 
-`./run day1`
+`./run day1-1`
