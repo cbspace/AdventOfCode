@@ -29,6 +29,8 @@
         mov     r8, 19                  ; 19 means 10^19 divisor or 0 - 9.99e19 range
         mov     rdi, 0                  ; 0 means no digits reached yet
         mov     r10, result_str         ; pointer to string
+        test    rsi, rsi                ; test the number
+        jz      .number_is_zero         ; if number is zero jump to label
         cmp     rsi, -1                 ; compare number to -1
         jg      .loop                   ; if number is positive go to loop
         neg     rsi                     ; make number positive
@@ -54,8 +56,12 @@
         test    r11, r11                ; test r11 and set zf accordingly
         jz      .done
         dec     r11                     ; decrement loop counter
-        dec     r8                     ; decrement divisor
+        dec     r8                      ; decrement divisor
         jmp     .loop
+    .number_is_zero:
+        mov     rax, '0'                ; load 0 character
+        mov     [r10], rax              ; store in string
+        inc     r10                     ; increment string pointer
     .done:
         mov     rcx, r10                ; load pointer to end of string
         sub     rcx, result_str         ; calculate string length

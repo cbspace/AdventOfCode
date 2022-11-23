@@ -1,3 +1,7 @@
+    ; Day1 Part 2: It works! This one chugs though, lucky it's written in assebly :)
+    ; There's probably a better algorithm to solve this that is more efficient.
+    ; Fun fact - This takes 1.95s to run on my machine and the python version takes 25.1s
+    
     global _start
 
     section .text
@@ -24,11 +28,6 @@
         mov     [r14], rbx              ; store total in array
         add     r14, 8                  ; move pointer
         add     rbp, 8                  ; increment array length
-
-        ; mov     rsi, rbx                ; temp print
-        ; call    int_to_string
-        ; mov     rsi, result_str
-        ; call    println
 
         cmp     r12, r13                ; test if end of list
         jne     .add_loop               ; not yet, keep looping
@@ -69,9 +68,8 @@
     section .data
         ; This is a bit of a hack, adding the (reformatted) input file
         ; as an include. The next step is to open the file using assembley!
-        ;numbers:    dq 3, 3, 4, -2, -4
-        ;numbers:
-        ;%include "day1_input.txt"
+        numbers:
+        %include "day1_input.txt"
         length:     equ $-numbers
         newline:    db 10
     
@@ -79,7 +77,7 @@
         ; For simplicity this section is aligned @ 8 bytes!
         result_str_len  resq 1
         result_str      resb 24
-        freq_array      resq 1000
+        freq_array      resq 1000000 ; the array is quite large...
 
 ; Register usage
 ; rax - Caller-saved register, Function return values
