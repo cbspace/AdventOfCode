@@ -1,4 +1,4 @@
-    ; Day1 Part 2: It works! This one chugs though, lucky it's written in assebly :)
+    ; Day1 Part 2: It works! This one chugs though, lucky it's written in assembly :)
     ; There's probably a better algorithm to solve this that is more efficient.
     ; Fun fact - This takes 1.95s to run on my machine and the python version takes 25.1s
     
@@ -10,7 +10,6 @@
 
     _start:
         mov     rbx, 0                  ; total
-        mov     r12, length             ; length of input array
         mov     r14, freq_array         ; pointer to freq_array
         mov     rbp, 0                  ; freq_array_length
     .loop_init:
@@ -29,7 +28,7 @@
         add     r14, 8                  ; move pointer
         add     rbp, 8                  ; increment array length
 
-        cmp     r12, r13                ; test if end of list
+        cmp     r13, length                ; test if end of list
         jne     .add_loop               ; not yet, keep looping
         jmp     .loop_init              ; at end, start list again
 
@@ -67,7 +66,7 @@
 
     section .data
         ; This is a bit of a hack, adding the (reformatted) input file
-        ; as an include. The next step is to open the file using assembley!
+        ; as an include. The next step is to open the file using assembly!
         numbers:
         %include "day1_input.txt"
         length:     equ $-numbers
