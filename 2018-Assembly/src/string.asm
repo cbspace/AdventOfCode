@@ -6,7 +6,7 @@
 
     ; Print contents of bytes from [rsi]
     ; Number of bytes (str len) at [rsi-8]
-    ; println adds newline character
+    ; with newline character
     println:
         mov     rax, 1                  ; system call for write
         mov     rdi, 1                  ; file handle 1 is stdout
@@ -18,6 +18,11 @@
         syscall
         ret
 
+    ; printcr - newline character
+    ; print   - print number of bytes specified in rdx from address in rsi
+    printcr:
+        mov     rdx, 1                  ; string length is 1
+        mov     rsi, newline            ; newline character
     print:
         mov     rax, 1                  ; system call for write
         mov     rdi, 1                  ; file handle 1 is stdout
