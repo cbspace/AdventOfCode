@@ -28,7 +28,7 @@
         add     r14, 8                  ; move pointer
         add     rbp, 8                  ; increment array length
 
-        cmp     r13, length                ; test if end of list
+        cmp     r13, length             ; test if end of list
         jne     .add_loop               ; not yet, keep looping
         jmp     .loop_init              ; at end, start list again
 
