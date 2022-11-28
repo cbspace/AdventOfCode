@@ -4,8 +4,8 @@
 %ifndef STRING_ASM
     %define STRING_ASM
 
-    ; Print contents of bytes from [rsi]
-    ; Number of bytes (str len) at [rsi-8]
+    ; Print contents of bytes from pointer in rsi
+    ; Number of bytes (str len) at rsi-8
     ; with newline character
     println:
         mov     rax, 1                  ; system call for write
@@ -29,7 +29,7 @@
         syscall
         ret
 
-    ; Integer to string: Convert int64 at rsi to string and save in result_str
+    ; Integer to string: Convert int64 in rsi to string and save in result_str
     int_to_string:
         mov     r8, 19                  ; 19 means 10^19 divisor or 0 - 9.99e19 range
         mov     rdi, 0                  ; 0 means no digits reached yet

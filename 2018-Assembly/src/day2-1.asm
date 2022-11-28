@@ -4,27 +4,38 @@
 
     section .text
 
+    %include     "file.asm"
     %include     "string.asm"
     %define      BOX_ID_LENGTH 6
 
     _start:
+        call    file_open
+
+        call    file_read_line
+        mov     rsi, read_buffer
+        call    println
+
         xor     r12, r12                ; number of boxes containing a letter repeated twice
         xor     r13, r13                ; number of boxes containing a letter repeated thre times
-        mov     r12, box_ids            ; pointer to first box_id
+        mov     r12, read_buffer        ; pointer to first box_id
         xor     rbx, rbx                ; loop counter
 
     .loop:
-        call    check_box
+        call    check_box               ; check the current box for repeating characters
 
-        mov     rdx, 6                  ; load str len
-        mov     rsi, r12                ; load string
-        call    print                   ; temp print
-        call    printcr
+        ; mov     rdx, 6                  ; load str len
+        ; mov     rsi, r12                ; load string
+        ; call    print                   ; temp print
+        ; call    printcr
+
+
+
+        call    file_close
 
         add     r12, BOX_ID_LENGTH      ; incrememnt the pointer
         add     rbx, BOX_ID_LENGTH      ; increment counter
-        cmp     rbx, length             ; check if we reached the end
-        jne     .loop
+        ;cmp     rbx, length             ; check if we reached the end
+        ;jne     .loop
 
     .exit:
         mov     rax, 60                 ; system call for exit
@@ -37,17 +48,18 @@
         ret
 
     section .data
-        ; This is a bit of a hack, adding the (reformatted) input file
-        ; as an include. The next step is to open the file using assembley!
-        box_ids:
-        %include        "day2_test.txt"
-        length:         equ ($-box_ids)    ; size of box_ids
-        newline:        db 10
+        file_path:          db  "./input/day2_test.txt", 0
+        newline:            db  10
     
     section .bss
         ; For simplicity this section is aligned @ 8 bytes!
-        result_str_len  resq 1
-        result_str      resb 24
+        file_descriptor     resq 1
+        read_buffer_len     resq 1
+        read_buffer         resb 1024
+        result_str_len      resq 1
+        result_str          resb 24
+        no_of_duplicates    resq BOX_ID_LENGTH
+        no_of_triplicates   resq BOX_ID_LENGTH
 
 ; Register usage
 ; rax - Caller-saved register, Function return values
