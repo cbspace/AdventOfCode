@@ -29,13 +29,32 @@
     ; rdx - buffer length
     ; FIXME: Currently we just read 1024 bytes without checking
     ; if there are any more bytes or checking for errors.
-    file_read_line:
-        mov     rdi, [file_descriptor]  ; the file name
+    file_read:
+        mov     rdi, [file_descriptor]  ; the file descriptor
         mov     rsi, read_buffer        ; buffer for read
         mov     rdx, 1024               ; length to read
         mov     rax, 0                  ; syscall for read
         syscall
         mov     [read_buffer_len], rax  ; store the buffer length
+        ret
+
+    file_read_line:
+        mov     rdi, [file_descriptor]  ; the file descriptor
+        mov     rsi, read_buffer        ; buffer for read
+        mov     rdx, 1                  ; length to read
+        mov     r8, 0                   ; length counter
+    .read_loop:
+        mov     rax, 0                  ; syscall for read
+        syscall                         ; read a byte
+        test    rax, rax                ; check bytes read
+        jz      .end_reached            ; end of line
+        test    [rsi], 10               ; check for newline char
+        je      .end_reached
+        inc     rsi                     ; move buffer pointer
+        inc     r8                      ; increament counter
+        jmp     .read_loop
+    .end_reached:
+        mov     [read_buffer_len], r8      ; store the buffer length
         ret
 
     ; close( <file descriptor> )

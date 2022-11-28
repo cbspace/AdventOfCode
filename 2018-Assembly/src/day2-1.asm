@@ -11,7 +11,7 @@
     _start:
         call    file_open
 
-        call    file_read_line
+        call    file_read
         mov     rsi, read_buffer
         call    println
 
