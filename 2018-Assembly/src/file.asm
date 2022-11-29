@@ -38,6 +38,7 @@
         mov     [read_buffer_len], rax  ; store the buffer length
         ret
 
+    ; rax contains 1 when not EOF and 0 when EOF (End of file)
     file_read_line:
         mov     rdi, [file_descriptor]  ; the file descriptor
         mov     rsi, read_buffer        ; buffer for read
@@ -48,13 +49,13 @@
         syscall                         ; read a byte
         test    rax, rax                ; check bytes read
         jz      .end_reached            ; end of line
-        test    [rsi], 10               ; check for newline char
+        cmp     [rsi], byte 10          ; check for newline char
         je      .end_reached
         inc     rsi                     ; move buffer pointer
         inc     r8                      ; increament counter
         jmp     .read_loop
     .end_reached:
-        mov     [read_buffer_len], r8      ; store the buffer length
+        mov     [read_buffer_len], r8   ; store the buffer length
         ret
 
     ; close( <file descriptor> )
