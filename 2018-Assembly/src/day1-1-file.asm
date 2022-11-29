@@ -6,33 +6,35 @@
     %include    "string.asm"
 
     _start:
-        call    file_open         ; open input file
-        mov     rbx, 0            ; total
-        mov     rbp, read_buffer  ; pointer to number
-        ;mov     r12, length       ; length of input array
-        xor     r13, r13          ; counter
+        call    file_open           ; open input file
+        mov     rbx, 0              ; total
     
     .add_loop:
         call    file_read_line      ; read a line into buffer
-        mov     rsi, read_buffer
+        mov     r12, rax            ; store return value (!EOF)
+
+        mov     rsi, read_buffer    ; temp print
         call    println
 
-        ; add     rbx, [rbp]        ; add the numbers
-        ; add     rbp, 8            ; move pointer
-        ; add     r13, 8            ; increment counter
-        ; cmp     r12, r13
-        ; jne     .add_loop
+        mov     rsi, read_buffer    ; load the string
+        call    string_to_int       ; convert to int
+        ; add     rbx, rax            ; add the numbers
+        ; test    r12, r12
+        ; jnz     .add_loop
 
-        ; mov     rsi, rbx          ; load total
+        ; mov     rsi, rbx            ; load total
         ; call    int_to_string
 
-        ; mov     rsi, result_str
-        ; call    println
+        mov     rsi, rax
+        call    int_to_string
+
+        mov     rsi, result_str
+        call    println
 
     .exit:
-        mov       rax, 60         ; system call for exit
-        xor       rdi, rdi        ; exit code 0
-        syscall                   ; invoke operating system to exit
+        mov       rax, 60           ; system call for exit
+        xor       rdi, rdi          ; exit code 0
+        syscall                     ; invoke operating system to exit
 
     section .data
         file_path:          db  "./input/day1_input1.txt", 0

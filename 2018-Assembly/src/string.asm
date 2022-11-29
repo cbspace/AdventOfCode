@@ -73,6 +73,32 @@
         mov     [result_str_len], rcx   ; populate string length
         ret
 
+    ; Convert string pointed to by rsi to int64 stored in rax
+    ; string length stored in [rsi - 8]
+    ; input string is integer with optional leading '-'
+    string_to_int:
+        mov     r10, 0                  ; the total value
+        mov     r8, [rsi - 8]           ; get string length / counter
+        cmp     r8, 0                   ; is string empty?
+        jge     .add_loop               ; nope so keep going
+        ret                             ; string is empty so get outta here
+    .add_loop:
+        mov     r10, [rsi]              ; get character
+        sub     r10, 30h                ; minus ASCII '0' value
+        js      .leading_char           ; negative value
+        cmp     r10, 9                  ; compare value to '9'
+        jg      .leading_char           ; non integer value
+        mov     r9, r8                  ; load the counter to r9
+        call    pow10                   ; multiply by 10^n
+        mul     r10                     ; rdx:rax = rax * r10
+        add     r10, rax                ; add to total
+        jmp     .add_loop               ; go to next character
+    .leading_char:
+
+    .done:
+        mov     rax, r10                ; return the number in rax
+        ret
+
     ; Take int64 in r9 and return 10^r9 in rax
     ; Fixme - return 0 on overflow
     pow10:
@@ -81,7 +107,7 @@
     .multiply_loop:
         cmp     r9, 0
         jz      .done
-        mul     rcx                      ; rax = rax * r8
+        mul     rcx                      ; rdx:rax = rax * rcx
         dec     r9
         jmp     .multiply_loop
     .done:
