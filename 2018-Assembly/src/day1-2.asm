@@ -6,20 +6,36 @@
 
     section .text
 
+    %include "file.asm"
     %include "string.asm"
 
     _start:
+        call    file_open               ; open input file
+        mov     r15, input_numbers      ; pointer to number
+        mov     rbx, 0                  ; counter for number of inputs
+    .read_inputs:
+        call    file_read_line          ; read a line into buffer
+        test    rax, rax                ; test if end of file
+        jz      .done_reading           ; end of file reached
+        mov     rsi, read_buffer        ; load the string
+        call    string_to_int           ; convert to int
+        mov     [r15], rax              ; store the number
+        add     rbx, 8                  ; increment count
+        add     r15, 8                  ; increment pointer
+        jmp     .read_inputs
+    .done_reading:
+        call    file_close              ; close input file
+        mov     [input_numbers_len], rbx; store length
         mov     rbx, 0                  ; total
         mov     r14, freq_array         ; pointer to freq_array
         mov     rbp, 0                  ; freq_array_length
     .loop_init:
-        mov     r15, numbers            ; pointer to number
+        mov     r15, input_numbers      ; pointer to number
         xor     r13, r13                ; counter
     .add_loop:
         add     rbx, [r15]              ; increase total
         add     r15, 8                  ; move pointer
         add     r13, 8                  ; increment counter
-
         call    search_array            ; check if number is in array
         cmp     rax, 1                  ; compare return value
         je      .found                  ; found a match
@@ -28,7 +44,7 @@
         add     r14, 8                  ; move pointer
         add     rbp, 8                  ; increment array length
 
-        cmp     r13, length             ; test if end of list
+        cmp     r13, [input_numbers_len]  ; test if end of list
         jne     .add_loop               ; not yet, keep looping
         jmp     .loop_init              ; at end, start list again
 
@@ -65,18 +81,20 @@
         ret
 
     section .data
-        ; This is a bit of a hack, adding the (reformatted) input file
-        ; as an include. The next step is to open the file using assembly!
-        numbers:
-        %include "day1_input_mod.txt"
-        length:     equ $-numbers
-        newline:    db 10
+        file_path:  db  "./input/day1_input.txt", 0
+        newline:    db  10
     
     section .bss
         ; For simplicity this section is aligned @ 8 bytes!
-        result_str_len  resq 1
-        result_str      resb 24
-        freq_array      resq 1000000 ; the array is quite large...
+        file_descriptor     resq 1
+        read_buffer_len     resq 1
+        read_buffer         resb 64
+        result_str_len      resq 1
+        result_str          resb 24
+        input_numbers_len   resq 1
+        input_numbers       resq 1000      
+        freq_array          resq 1000000   ; need a large array
+
 
 ; Register usage
 ; rax - Caller-saved register, Function return values
