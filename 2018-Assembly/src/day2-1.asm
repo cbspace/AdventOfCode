@@ -6,7 +6,6 @@
 
     %include     "file.asm"
     %include     "string.asm"
-    %define      BOX_ID_LENGTH 6
 
     _start:
         call    file_open
@@ -17,25 +16,11 @@
 
         xor     r12, r12                ; number of boxes containing a letter repeated twice
         xor     r13, r13                ; number of boxes containing a letter repeated thre times
-        mov     r12, read_buffer        ; pointer to first box_id
+        mov     r14, read_buffer        ; pointer to first box_id
         xor     rbx, rbx                ; loop counter
 
     .loop:
         call    check_box               ; check the current box for repeating characters
-
-        ; mov     rdx, 6                  ; load str len
-        ; mov     rsi, r12                ; load string
-        ; call    print                   ; temp print
-        ; call    printcr
-
-
-
-        call    file_close
-
-        add     r12, BOX_ID_LENGTH      ; incrememnt the pointer
-        add     rbx, BOX_ID_LENGTH      ; increment counter
-        ;cmp     rbx, length             ; check if we reached the end
-        ;jne     .loop
 
     .exit:
         mov     rax, 60                 ; system call for exit
@@ -55,11 +40,11 @@
         ; For simplicity this section is aligned @ 8 bytes!
         file_descriptor     resq 1
         read_buffer_len     resq 1
-        read_buffer         resb 1024
-        result_str_len      resq 1
-        result_str          resb 24
-        no_of_duplicates    resq BOX_ID_LENGTH
-        no_of_triplicates   resq BOX_ID_LENGTH
+        read_buffer         resb 32
+        result_str_len      resq 1          ; for debug
+        result_str          resb 32         ; for debug
+        ;no_of_duplicates    resq 1
+        ;no_of_triplicates   resq 1
 
 ; Register usage
 ; rax - Caller-saved register, Function return values

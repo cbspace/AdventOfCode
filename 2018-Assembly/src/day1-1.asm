@@ -36,7 +36,7 @@
         ; For simplicity this section is aligned @ 8 bytes!
         file_descriptor     resq 1
         read_buffer_len     resq 1
-        read_buffer         resb 64
+        read_buffer         resb 24
         result_str_len      resq 1
         result_str          resb 24
 
