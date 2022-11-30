@@ -77,26 +77,38 @@
     ; string length stored in [rsi - 8]
     ; input string is integer with optional leading '-'
     string_to_int:
-        mov     r10, 0                  ; the total value
+        mov     r11, 0                  ; the total value
         mov     r8, [rsi - 8]           ; get string length / counter
+        mov     rax, r8                 ; store length in rax
+        dec     rax                     ; calculate offset
+        add     rsi, rax                ; move to end of string
+        mov     rdi, 0                  ; int power of 10
         cmp     r8, 0                   ; is string empty?
-        jge     .add_loop               ; nope so keep going
+        jnz     .add_loop               ; nope so keep going
+        mov     rax, 0                  ; return 0 on empty string
         ret                             ; string is empty so get outta here
     .add_loop:
         mov     r10, [rsi]              ; get character
+        and     r10, 000000ffh          ; mask high bytes
+        dec     rsi                     ; move pointer
         sub     r10, 30h                ; minus ASCII '0' value
         js      .leading_char           ; negative value
         cmp     r10, 9                  ; compare value to '9'
         jg      .leading_char           ; non integer value
-        mov     r9, r8                  ; load the counter to r9
+        mov     r9, rdi                 ; load the power of 10 to r9
         call    pow10                   ; multiply by 10^n
         mul     r10                     ; rdx:rax = rax * r10
-        add     r10, rax                ; add to total
+        add     r11, rax                ; add to total
+        inc     rdi                     ; increase power of 10
+        dec     r8                      ; decrement length counter
+        jz      .done                   ; end of the string
         jmp     .add_loop               ; go to next character
     .leading_char:
-
+        cmp     r10, -3                 ; do we have '-' character?
+        jne     .done                   ; no we don't
+        neg     r11                     ; we have '-' so negate value
     .done:
-        mov     rax, r10                ; return the number in rax
+        mov     rax, r11                ; return the number in rax
         ret
 
     ; Take int64 in r9 and return 10^r9 in rax
