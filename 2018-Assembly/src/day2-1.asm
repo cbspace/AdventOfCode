@@ -10,7 +10,7 @@
     _start:
         call    file_open
 
-        call    file_read
+        call    file_read_line
         mov     rsi, read_buffer
         call    println
 
@@ -20,6 +20,7 @@
         xor     rbx, rbx                ; loop counter
 
     .loop:
+        mov     rdi, read_buffer
         call    check_box               ; check the current box for repeating characters
 
     .exit:
@@ -28,7 +29,15 @@
         syscall                         ; invoke operating system to exit
 
     ; Check for repeated characters in box_id pointed to by rdi
+    ; uses r12 for duplicate count and r13 for triplicate count (global)
+    ; uses r8 for duplicate count and r9 for triplicate count (local)
     check_box:
+        xor     r8, r8                  ; duplicate count
+        xor     r9, r9                  ; triplicate count
+        xor     r10, r10                ; counter
+    .check_loop:
+        xor     r11, r11                ; clear all bits in r11
+        mov     r11, [rdi]              ; get character
 
         ret
 

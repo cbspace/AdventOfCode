@@ -1,5 +1,5 @@
-abcdef
 bababc
+abcdef
 abbcde
 abcccd
 aabcdd
