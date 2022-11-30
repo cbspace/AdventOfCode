@@ -68,7 +68,7 @@
         ; This is a bit of a hack, adding the (reformatted) input file
         ; as an include. The next step is to open the file using assembly!
         numbers:
-        %include "day1_input.txt"
+        %include "day1_input_mod.txt"
         length:     equ $-numbers
         newline:    db 10
     
