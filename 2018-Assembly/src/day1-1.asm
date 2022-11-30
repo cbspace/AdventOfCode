@@ -2,44 +2,43 @@
 
     section .text
 
-    %include "string.asm"
+    %include    "file.asm"
+    %include    "string.asm"
 
     _start:
-        mov     rbx, 0            ; total
-        mov     rbp, numbers      ; pointer to number
-        mov     r12, length       ; length of input array
-        xor     r13, r13          ; counter
+        call    file_open           ; open input file
+        mov     rbx, 0              ; total
     
     .add_loop:
-        add     rbx, [rbp]
-        add     rbp, 8            ; move pointer
-        add     r13, 8            ; increment counter
-        cmp     r12, r13
-        jne     .add_loop
+        call    file_read_line      ; read a line into buffer
+        mov     r12, rax            ; store return value (!EOF)
+        mov     rsi, read_buffer    ; load the string
+        call    string_to_int       ; convert to int
+        add     rbx, rax            ; add the numbers
+        test    r12, r12            ; test if end of file
+        jnz     .add_loop
 
-        mov     rsi, rbx          ; load total
-        call    int_to_string
-
-        mov     rsi, result_str
-        call    println
+        mov     rsi, rbx            ; load total
+        call    int_to_string       ; convert to string
+        mov     rsi, result_str     ; load string
+        call    println             ; print total
 
     .exit:
-        mov       rax, 60         ; system call for exit
-        xor       rdi, rdi        ; exit code 0
-        syscall                   ; invoke operating system to exit
+        mov       rax, 60           ; system call for exit
+        xor       rdi, rdi          ; exit code 0
+        syscall                     ; invoke operating system to exit
 
     section .data
-        ; This is a bit of a hack, adding the (reformatted) input file
-        ; as an include. The next step is to open the file using assembley!
-        numbers:
-        %include "day1_input_mod.txt"
-        length:     equ $-numbers
-        newline:    db 10
+        file_path:          db  "./input/day1_input.txt", 0
+        newline:            db 10
     
     section .bss
         ; For simplicity this section is aligned @ 8 bytes!
-        result_str_len  resq 1
-        result_str      resb 24
+        file_descriptor     resq 1
+        read_buffer_len     resq 1
+        read_buffer         resb 64
+        result_str_len      resq 1
+        result_str          resb 24
 
 ; Register usage
 ; rax - Caller-saved register, Function return values
