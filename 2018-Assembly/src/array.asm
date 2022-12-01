@@ -1,5 +1,7 @@
 ; Include file for array functions
 ; By Craig Brennan 2022
+; Functions for 8 bit and 64 bit arrays (ASCII string and int64)
+; In the future can be reduced by using macros to combine 8 and 64 bit
 
 %ifndef ARRAY_ASM
     %define ARRAY_ASM
@@ -8,7 +10,7 @@
     ; input array is pointed to by rdi with length in [rdi - 8]
     ; value to compare stored in rbx
     ; return -1 when not found
-    array_index:
+    array_index_64:
         mov       r9, [rdi - 8]         ; array length
         test      r9, r9                ; is the array empty?
         jz        .not_found            ; yes so leave
@@ -31,7 +33,7 @@
     ; search array for byte and return number of occurances in rax
     ; input array is pointed to by rdi with length in [rdi - 8]
     ; byte to compare stored in rbx
-    array_count:
+    array_count_8:
         mov       r9, [rdi - 8]         ; array length
         xor       rax, rax              ; number of occurances
         test      r9, r9                ; is the array empty?
@@ -49,6 +51,14 @@
         cmp       r10, r9               ; are we at the end of array?
         jne       .loop                 ; no, keep going
     .done:
+        ret
+
+    ; search array for byte and remove all instances of the byte
+    ; input array is pointed to by rdi with length in [rdi - 8]
+    ; byte to remove stored in rbx
+    ; return value is number of bytes removed
+    array_remove_all_of_8:
+
         ret
 
 %endif

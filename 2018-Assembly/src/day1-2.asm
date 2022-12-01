@@ -36,7 +36,7 @@
         add     r15, 8                      ; move pointer
         add     r13, 8                      ; increment counter
         mov     rdi, freq_array             ; load frequency array pointer
-        call    array_index                 ; check if number is in array
+        call    array_index_64              ; check if number is in array
         cmp     rax, 0                      ; compare return value
         jns     .found                     ; found a match
 

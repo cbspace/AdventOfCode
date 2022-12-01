@@ -11,13 +11,13 @@
     _start:
         call    file_open
 
-        call    file_read_line
-        mov     rsi, read_buffer
-        call    println
+        call    file_read_line          ; read a line from file
+        mov     rsi, read_buffer        ; load buffer
+        call    println                 ; print the line
 
         mov     rdi, read_buffer        ; load buffer
-        mov     rbx, qword 'b'          ; character to find
-        call    array_count             ; get the count
+        mov     rbx, 'a'                ; character to find
+        call    array_count_8           ; get the count
         mov     [temp_count], rax       ; store the count
         mov     rsi, [temp_count]       ; load count to rsi
         call    int_to_string           ; covert to string
