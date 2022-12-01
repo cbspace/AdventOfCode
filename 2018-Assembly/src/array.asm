@@ -43,7 +43,7 @@
         jne       .not_match            ; value does not match
         inc       rax                   ; match, increase count
     .not_match:
-        add       r10, 8                ; increase counter
+        add       r10, 1                ; increase counter
         add       rdi, 8                ; increase pointer
         cmp       r10, r9               ; are we at the end of array?
         jne       .loop                 ; no, keep going

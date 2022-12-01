@@ -6,12 +6,22 @@
 
     %include     "file.asm"
     %include     "string.asm"
+    %include     "array.asm"
 
     _start:
         call    file_open
 
         call    file_read_line
         mov     rsi, read_buffer
+        call    println
+
+        mov     rdi, read_buffer
+        mov     rbx, qword 'b'
+        call    array_count
+        mov     [temp_count], rax
+        mov     rsi, [temp_count]
+        call    int_to_string
+        mov     rsi, result_str
         call    println
 
         xor     r12, r12                ; number of boxes containing a letter repeated twice
@@ -21,7 +31,7 @@
 
     .loop:
         mov     rdi, read_buffer
-        call    check_box               ; check the current box for repeating characters
+        ;call    check_box               ; check the current box for repeating characters
 
     .exit:
         mov     rax, 60                 ; system call for exit
@@ -52,6 +62,7 @@
         read_buffer         resb 32
         result_str_len      resq 1          ; for debug
         result_str          resb 32         ; for debug
+        temp_count          resq 1
         ;no_of_duplicates    resq 1
         ;no_of_triplicates   resq 1
 
