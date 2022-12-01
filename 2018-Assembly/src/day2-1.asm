@@ -15,14 +15,14 @@
         mov     rsi, read_buffer
         call    println
 
-        mov     rdi, read_buffer
-        mov     rbx, qword 'b'
-        call    array_count
-        mov     [temp_count], rax
-        mov     rsi, [temp_count]
-        call    int_to_string
-        mov     rsi, result_str
-        call    println
+        mov     rdi, read_buffer        ; load buffer
+        mov     rbx, qword 'b'          ; character to find
+        call    array_count             ; get the count
+        mov     [temp_count], rax       ; store the count
+        mov     rsi, [temp_count]       ; load count to rsi
+        call    int_to_string           ; covert to string
+        mov     rsi, result_str         ; load string
+        call    println                 ; print
 
         xor     r12, r12                ; number of boxes containing a letter repeated twice
         xor     r13, r13                ; number of boxes containing a letter repeated thre times
@@ -60,8 +60,8 @@
         file_descriptor     resq 1
         read_buffer_len     resq 1
         read_buffer         resb 32
-        result_str_len      resq 1          ; for debug
-        result_str          resb 32         ; for debug
+        result_str_len      resq 1
+        result_str          resb 32
         temp_count          resq 1
         ;no_of_duplicates    resq 1
         ;no_of_triplicates   resq 1
