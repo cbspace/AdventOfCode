@@ -28,7 +28,8 @@ GameShape get_my_shape(GameShape, GameOutcome);
 int main(int, char**) {
     fstream ifs;
     string line_str;
-    int part1_score, part2_score = 0;
+    int part1_score = 0;
+    int part2_score = 0;
 
     ifs.open("input/day2_input.txt", ios::in);
 
