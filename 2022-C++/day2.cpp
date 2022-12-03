@@ -16,12 +16,6 @@ enum class GameOutcome {
     Win = 6
 };
 
-struct Game {
-    GameShape my_shape;
-    GameShape opponent_shape;
-    GameOutcome outcome;
-};
-
 GameOutcome get_outcome(GameShape, GameShape);
 GameShape get_my_shape(GameShape, GameOutcome);
 
@@ -34,7 +28,8 @@ int main(int, char**) {
     ifs.open("input/day2_input.txt", ios::in);
 
     while (!ifs.eof()) {
-        Game part1_this_game, part2_this_game;
+        GameShape opponent_shape, part1_my_shape, part2_my_shape;
+        GameOutcome part1_game_outcome, part2_game_outcome;
 
         getline(ifs, line_str);
         if (line_str.empty())
@@ -42,39 +37,36 @@ int main(int, char**) {
 
         switch (line_str[0]) {
             case 'A':
-                part1_this_game.opponent_shape = GameShape::Rock;
-                part2_this_game.opponent_shape = GameShape::Rock;
+                opponent_shape = GameShape::Rock;
                 break;
             case 'B':
-                part1_this_game.opponent_shape = GameShape::Paper;
-                part2_this_game.opponent_shape = GameShape::Paper;
+                opponent_shape = GameShape::Paper;
                 break;
             case 'C':
-                part1_this_game.opponent_shape = GameShape::Scissors;
-                part2_this_game.opponent_shape = GameShape::Scissors;
+                opponent_shape = GameShape::Scissors;
                 break;
         }
 
         switch (line_str[2]) {
             case 'X':
-                part1_this_game.my_shape = GameShape::Rock;
-                part2_this_game.outcome = GameOutcome::Lose;
+                part1_my_shape = GameShape::Rock;
+                part2_game_outcome = GameOutcome::Lose;
                 break;
             case 'Y':
-                part1_this_game.my_shape = GameShape::Paper;
-                part2_this_game.outcome = GameOutcome::Draw;
+                part1_my_shape = GameShape::Paper;
+                part2_game_outcome = GameOutcome::Draw;
                 break;
             case 'Z':
-                part1_this_game.my_shape = GameShape::Scissors;
-                part2_this_game.outcome = GameOutcome::Win;
+                part1_my_shape = GameShape::Scissors;
+                part2_game_outcome = GameOutcome::Win;
                 break;
         }
 
-        part1_this_game.outcome = get_outcome(part1_this_game.my_shape, part1_this_game.opponent_shape);
-        part1_score += static_cast<int>(part1_this_game.my_shape) + static_cast<int>(part1_this_game.outcome);
+        part1_game_outcome = get_outcome(part1_my_shape, opponent_shape);
+        part1_score += static_cast<int>(part1_my_shape) + static_cast<int>(part1_game_outcome);
 
-        part2_this_game.my_shape = get_my_shape(part2_this_game.opponent_shape, part2_this_game.outcome);
-        part2_score += static_cast<int>(part2_this_game.my_shape) + static_cast<int>(part2_this_game.outcome);
+        part2_my_shape = get_my_shape(opponent_shape, part2_game_outcome);
+        part2_score += static_cast<int>(part2_my_shape) + static_cast<int>(part2_game_outcome);
     }
 
     ifs.close();
