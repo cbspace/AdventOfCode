@@ -1,7 +1,6 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <vector>
 
 using namespace std;
 
@@ -22,18 +21,16 @@ int main(int, char**) {
         string sack1_contents = line_str.substr(0,sack_size);
         string sack2_contents = line_str.substr(sack_size,line_str.length());
         
-        int score;
         for (const char i : sack1_contents) {
             if (sack2_contents.find(i) != std::string::npos) {
                 if (islower(i)) {
-                    score = i - 'a' + 1;
+                    total += i - 'a' + 1;
                 } else {
-                    score = i - 'A' + 27;
+                    total += i - 'A' + 27;
                 }
+                break;
             }
         }
-
-        total += score;
     }
 
     ifs.close();
