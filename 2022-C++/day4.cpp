@@ -63,25 +63,22 @@ vector<int> get_range(string const str_in) {
     int start = stoi(str_in.substr(0,delimiter_pos));
     int end = stoi(str_in.substr(delimiter_pos+1));
 
-    for (int i=start; i<=end; i++) {
+    for (int i=start; i<=end; i++)
         elf_range.push_back(i);
-    }
     return elf_range;
 }
 
 bool check_if_in_range(vector<int> const& larger, vector<int> const& smaller) {
     for (const int i : smaller) {
-        if (find(larger.begin(), larger.end(), i) == larger.end()) {
+        if (find(larger.begin(), larger.end(), i) == larger.end())
             return false;
-        }
     }
     return true;
 }
 
 bool check_if_some_overlap(vector<int> const& larger, vector<int> const& smaller) {
     for (const int i : smaller) {
-        if (find(larger.begin(), larger.end(), i) != larger.end()) {
+        if (find(larger.begin(), larger.end(), i) != larger.end())
             return true;
-        }
     }
 }
