@@ -59,7 +59,6 @@ int main(int, char**) {
 
 vector<int> get_range(string const str_in) {
     vector<int> elf_range;
-
     int delimiter_pos = str_in.find('-');
     int start = stoi(str_in.substr(0,delimiter_pos));
     int end = stoi(str_in.substr(delimiter_pos+1));
@@ -67,19 +66,16 @@ vector<int> get_range(string const str_in) {
     for (int i=start; i<=end; i++) {
         elf_range.push_back(i);
     }
-
     return elf_range;
 }
 
 bool check_if_in_range(vector<int> const& larger, vector<int> const& smaller) {
-    bool overlapping = true;
-
     for (const int i : smaller) {
         if (find(larger.begin(), larger.end(), i) == larger.end()) {
-            overlapping = false;
+            return false;
         }
     }
-    return overlapping;
+    return true;
 }
 
 bool check_if_some_overlap(vector<int> const& larger, vector<int> const& smaller) {
