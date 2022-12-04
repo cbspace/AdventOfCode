@@ -16,11 +16,12 @@
         call    println                 ; print the line
 
         mov     rdi, read_buffer        ; load buffer
-        mov     rbx, 'a'                ; character to find
-        call    array_count_8           ; get the count
-        mov     [temp_count], rax       ; store the count
-        mov     rsi, [temp_count]       ; load count to rsi
-        call    int_to_string           ; covert to string
+        ; mov     rbx, 'a'                ; character to find
+        ; call    array_count_8           ; get the count
+        ; mov     [temp_count], rax       ; store the count
+        ; mov     rsi, [temp_count]       ; load count to rsi
+        call    array_get_unique_8      ; get unique array
+        ;call    int_to_string           ; covert to string
         mov     rsi, result_str         ; load string
         call    println                 ; print
 

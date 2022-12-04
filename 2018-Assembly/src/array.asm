@@ -53,12 +53,50 @@
     .done:
         ret
 
+    ; search array and create array of unique bytes
+    ; input array is pointed to by rdi with length in [rdi - 8]
+    ; store the unique array and length in result_str and result_str_len
+    array_get_unique_8:
+        xor       r11, r11               ; result length
+        mov       r12, rdi               ; pointer to input array
+        xor       r9, r9                 ; loop counter
+        mov       rsi, result_str        ; point to result str
+        mov       r8, [rdi - 8]          ; array length
+        test      r8, r8                 ; test if empty
+        jnz        .loop                 ; if empty end
+        mov       [result_str_len], r11  ; store result length of 0
+        ret                              ; empty string so end
+    .loop:
+        mov       rbx, [r12]             ; get character
+        and       rbx, 000000ffh         ; mask high bytes
+        mov       rdi, result_str        ; load the result array
+        push      r8                     ; save registers
+        push      r9
+        push      r10
+        call      array_count_8          ; check if char already in array
+        pop       r10                    ; restore registers
+        pop       r9
+        pop       r8
+        test      rax, rax               ; check result value
+        jnz       .not_unique            ; character already exists
+        mov       [rsi], rbx             ; save character in array
+        inc       rsi                    ; increment pointer to result
+        inc       r11                    ; increment result array length
+        mov       [result_str_len], r11  ; store result length
+    .not_unique:
+        inc       r9                     ; increment counter
+        inc       r12                    ; increment pointer to input array
+        cmp       r9, r8                 ; see if we are at the end of input
+        jne       .loop                  ; not at the end so keep looping
+        ret
+    
+
     ; search array for byte and remove all instances of the byte
     ; input array is pointed to by rdi with length in [rdi - 8]
     ; byte to remove stored in rbx
     ; return value is number of bytes removed
     array_remove_all_of_8:
-
+        
         ret
 
 %endif
