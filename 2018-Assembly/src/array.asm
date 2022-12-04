@@ -57,17 +57,16 @@
     ; input array is pointed to by rdi with length in [rdi - 8]
     ; store the unique array and length in result_str and result_str_len
     array_get_unique_8:
-        xor       r11, r11               ; result length
-        mov       r12, rdi               ; pointer to input array
+        mov       qword [result_str_len], 0  ; store result length of 0
+        mov       r11, rdi               ; pointer to input array
         xor       r9, r9                 ; loop counter
         mov       rsi, result_str        ; point to result str
         mov       r8, [rdi - 8]          ; array length
         test      r8, r8                 ; test if empty
         jnz        .loop                 ; if empty end
-        mov       [result_str_len], r11  ; store result length of 0
         ret                              ; empty string so end
     .loop:
-        mov       rbx, [r12]             ; get character
+        mov       rbx, [r11]             ; get character
         and       rbx, 000000ffh         ; mask high bytes
         mov       rdi, result_str        ; load the result array
         push      r8                     ; save registers
@@ -81,11 +80,10 @@
         jnz       .not_unique            ; character already exists
         mov       [rsi], rbx             ; save character in array
         inc       rsi                    ; increment pointer to result
-        inc       r11                    ; increment result array length
-        mov       [result_str_len], r11  ; store result length
+        inc       qword [result_str_len] ; increment result array length
     .not_unique:
         inc       r9                     ; increment counter
-        inc       r12                    ; increment pointer to input array
+        inc       r11                    ; increment pointer to input array
         cmp       r9, r8                 ; see if we are at the end of input
         jne       .loop                  ; not at the end so keep looping
         ret

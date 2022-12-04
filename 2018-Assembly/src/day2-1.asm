@@ -9,51 +9,73 @@
     %include     "array.asm"
 
     _start:
+        mov     qword[no_of_duplicates], 0      ; initialise to 0
+        mov     qword[no_of_triplicates], 0     ; initialise to 0
         call    file_open
 
-        call    file_read_line          ; read a line from file
-        mov     rsi, read_buffer        ; load buffer
-        call    println                 ; print the line
-
-        mov     rdi, read_buffer        ; load buffer
-        ; mov     rbx, 'a'                ; character to find
-        ; call    array_count_8           ; get the count
-        ; mov     [temp_count], rax       ; store the count
-        ; mov     rsi, [temp_count]       ; load count to rsi
-        call    array_get_unique_8      ; get unique array
-        ;call    int_to_string           ; covert to string
-        mov     rsi, result_str         ; load string
-        call    println                 ; print
-
-        xor     r12, r12                ; number of boxes containing a letter repeated twice
-        xor     r13, r13                ; number of boxes containing a letter repeated thre times
-        mov     r14, read_buffer        ; pointer to first box_id
-        xor     rbx, rbx                ; loop counter
-
     .loop:
-        mov     rdi, read_buffer
-        ;call    check_box               ; check the current box for repeating characters
+        call    file_read_line                  ; read a line from file
+        test    rax, rax                        ; test return value (characters read)
+        jz      .get_answer                     ; if zero exit loop
+        mov     rdi, read_buffer                ; load buffer
+        call    array_get_unique_8              ; get unique array
+        call    check_box                       ; check the current box for repeating characters
+        jmp     .loop
 
+    .get_answer:
+        mov     rax, [no_of_duplicates]         ; load no of duplicates
+        mov     rcx, [no_of_triplicates]        ; load no of triplicates
+        mul     rcx                             ; multiply
+        mov     qword [answer], rax             ; save answer
+        mov     rsi, [answer]                   ; load answer
+        call    int_to_string                   ; convert to string
+        mov     rsi, result_str                 ; load string
+        call    println                         ; print answer
+        
     .exit:
-        mov     rax, 60                 ; system call for exit
-        xor     rdi, rdi                ; exit code 0
-        syscall                         ; invoke operating system to exit
+        mov     rax, 60                         ; system call for exit
+        xor     rdi, rdi                        ; exit code 0
+        syscall                                 ; invoke operating system to exit
 
-    ; Check for repeated characters in box_id pointed to by rdi
-    ; uses r12 for duplicate count and r13 for triplicate count (global)
-    ; uses r8 for duplicate count and r9 for triplicate count (local)
+    ; Check for repeated characters in box_id stored in read_buffer
+    ; use unique characters from result_str
+    ; updates no_of_duplicates and no_of_triplicates (global)
     check_box:
-        xor     r8, r8                  ; duplicate count
-        xor     r9, r9                  ; triplicate count
-        xor     r10, r10                ; counter
+        xor     r12, r12                        ; duplicate count
+        xor     r13, r13                        ; triplicate count
+        mov     r14, [result_str_len]           ; counter (length -> 0)
+        mov     rsi, result_str                 ; pointer to unique characters
     .check_loop:
-        xor     r11, r11                ; clear all bits in r11
-        mov     r11, [rdi]              ; get character
+        mov     rdi, read_buffer                ; pointer to box_id
+        mov     rbx, [rsi]                      ; get character to find
+        and     rbx, 000000ffh                  ; mask high bytes
+        call    array_count_8                   ; get character count
+        cmp     rax, 2                          ; compare no of characters against 2
+        jnge    .next                           ; less than 2 so move on
+        jne     .test_for_3                     ; not equal to 2 so test for 3
+        inc     r12                             ; increase duplicate count
+    .test_for_3:
+        cmp     rax, 3                          ; do we have 3 characters?
+        jne     .next                           ; no so move on
+        inc     r13                             ; increment triplicate count
+    .next:
+        inc     rsi                             ; increment pointer
+        dec     r14                             ; decrement counter
+        jnz     .check_loop                     ; keep loopoing
 
+        cmp     r12, 1                          ; compare no of duplicates against 1
+        jnge    .no_of_triplicates              ; if not >= than 1 move on
+        inc     qword [no_of_duplicates]        ; increment number of duplicates
+    .no_of_triplicates:
+        cmp     r13, 1                          ; compare no of triplicates against 1
+        jnge    .done                           ; if not >= than 1 move on
+        inc     qword [no_of_triplicates]       ; increment number of triplicates
+    .done:
         ret
 
+
     section .data
-        file_path:          db  "./input/day2_test.txt", 0
+        file_path:          db  "./input/day2_input.txt", 0
         newline:            db  10
     
     section .bss
@@ -63,9 +85,9 @@
         read_buffer         resb 32
         result_str_len      resq 1
         result_str          resb 32
-        temp_count          resq 1
-        ;no_of_duplicates    resq 1
-        ;no_of_triplicates   resq 1
+        no_of_duplicates    resq 1
+        no_of_triplicates   resq 1
+        answer              resq 1
 
 ; Register usage
 ; rax - Caller-saved register, Function return values
