@@ -36,11 +36,9 @@ int main(int, char**) {
 bool test_unique(string const & test_str) {
     string chars;
     for (const char c : test_str) {
-        if (chars.find(c) == std::string::npos) {
-            chars += c;
-        } else {
+        if (chars.find(c) != std::string::npos)
             return false;
-        }
+        chars += c;
     }
     return true;
 }
