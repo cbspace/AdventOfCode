@@ -30,8 +30,6 @@ struct Computer
 };
 
 void process_instruction(string const&, Computer*);
-void calculate_directory_sizes(vector<DirElement*> const&, int);
-void print_directory_structure(vector<DirElement*> const&, int);
 void get_small_dirs(vector<DirElement*> const&, vector<int>*, int);
 void get_large_dirs(vector<DirElement*> const&, vector<int>*, int);
 
@@ -56,10 +54,6 @@ int main(int, char**) {
         process_instruction(line_str, my_computer);
     }
     ifs.close();
-
-
-    calculate_directory_sizes(root_container, 0);
-    print_directory_structure(root_container, 0);
 
     get_small_dirs(root_container, my_computer->smallest, 100000);
     int total = 0;
@@ -104,26 +98,18 @@ void process_instruction(string const& instruction, Computer* c) {
             c->current_directory->contents.push_back(my_new_folder);
         } else {
             int space_index = instruction.find(" ");
-            long int s = stoi(instruction.substr(0,space_index));
+            int s = stoi(instruction.substr(0,space_index));
             string n = instruction.substr(space_index+1);
             DirElement* my_new_file = new DirElement{ElementType::file, n, s, {}, c->current_directory };
             c->current_directory->contents.push_back(my_new_file);
-        }
-    }
-}
 
-void calculate_directory_sizes(vector<DirElement*> const& directory, int total_size) {
-    for (DirElement* const d : directory) {
-        if (!d->contents.empty()) {
-            calculate_directory_sizes(d->contents, total_size);
-        } else {
-            DirElement* new_path = d;
+            DirElement* new_file_path = c->current_directory;
             while (true) {
-                if (new_path->parent == nullptr)
+                if (new_file_path == nullptr)
                     break;
                 
-                new_path->parent->size += d->size;
-                new_path = new_path->parent;
+                new_file_path->size += s;
+                new_file_path = new_file_path->parent;
             }
         }
     }
@@ -151,22 +137,6 @@ void get_large_dirs(vector<DirElement*> const& directory, vector<int>* small_lis
 
         if (!d->contents.empty()) {
             get_large_dirs(d->contents, small_list, find_greater_or_eq);
-        }
-    }
-}
-
-void print_directory_structure(vector<DirElement*> const& directory, int depth) {
-    for (DirElement* const d : directory) {
-        cout << setw(depth*2) << " " << "- " << d->name << " ";
-        if (d->type == ElementType::folder) {
-            cout << "(dir) size=" << d->size << ")" << endl;
-        }
-        else {
-            cout << "(file, size=" << d->size << ")" << endl;
-        }
-
-        if (!d->contents.empty()) {
-            print_directory_structure(d->contents, depth + 1);
         }
     }
 }
