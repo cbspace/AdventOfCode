@@ -8,19 +8,16 @@ cubes = {"red": 12, "green": 13, "blue": 14}
 games = []
 game_sum, power_sum = 0, 0
 
-def process_game(str_in):
-    game_aray = []
-    split_colon = str_in.split(": ")
+for l in infile:
+    game_array = []
+    split_colon = l.strip().split(": ")
     game_id = int(split_colon[0].split()[1])
-    game_aray.append(game_id)
+    game_array.append(game_id)
 
     split_games = split_colon[1].split("; ")
-    game_aray.append(split_games)
-    return game_aray
-
-for l in infile:
-    games.append(process_game(l.strip()))
-
+    game_array.append(split_games)
+    games.append(game_array)
+    
 infile.close()
 
 for g in games:
