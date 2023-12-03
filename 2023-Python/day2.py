@@ -30,14 +30,11 @@ for g in games:
         cube_strs = game_set.split(", ")
         for c in cube_strs:
             number, colour = int(c.split()[0]), c.split()[1]
+            min_red = number if colour == "red" and number > min_red else min_red
+            min_green = number if colour == "green" and number > min_green else min_green
+            min_blue = number if colour == "blue" and number > min_blue else min_blue
             if number > cubes[colour]:
                 possible = False
-            if colour == "red" and number > min_red:
-                min_red = number
-            elif colour == "green" and number > min_green:
-                min_green = number
-            elif colour == "blue" and number > min_blue:
-                min_blue = number
     if possible:
         game_sum += g[0]
 
