@@ -1,7 +1,5 @@
 #!/usr/bin/python3
 
-import sys
-
 infile = open("input/day3_input.txt","r")
 sch = []
 num_adj_gear_list = []

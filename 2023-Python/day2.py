@@ -1,7 +1,5 @@
 #!/usr/bin/python3
 
-import sys
-
 infile = open("input/day2_input.txt","r")
 cubes = {"red": 12, "green": 13, "blue": 14}
 

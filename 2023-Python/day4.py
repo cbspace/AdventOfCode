@@ -1,7 +1,5 @@
 #!/usr/bin/python3
 
-import sys
-
 infile = open("input/day4_input.txt","r")
 card_winnings = []
 card_deck = []

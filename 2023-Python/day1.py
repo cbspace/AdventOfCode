@@ -1,7 +1,5 @@
 #!/usr/bin/python3
 
-import sys
-
 infile = open("input/day1_input.txt","r")
 
 calibration_sum_1, calibration_sum_2 = 0, 0
