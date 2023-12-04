@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 
 infile = open("input/day4_input.txt","r")
-card_winnings = []
-card_deck = []
+card_winnings, card_deck = [], []
 current_card = 1
 
 def card_round():
@@ -43,11 +42,8 @@ for s in card_winnings:
 
 print("Part 1: ", winning_sum)
 
-total_cards = 0
-round_winnings = 1
-
-while round_winnings > 0:
+total_cards = len(card_deck)
+while card_round():
     total_cards += len(card_deck)
-    round_winnings = card_round()
 
 print("Part 2: ", total_cards)
