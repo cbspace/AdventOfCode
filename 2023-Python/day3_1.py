@@ -14,19 +14,17 @@ infile.close()
 y_max = len(sch) - 1
 x_max = len(sch[0]) - 1
 
-# TODO: Fix this mess
 def symbol_adjacent(y, x):
-    left = not(sch[y][x-1].isdigit() or sch[y][x-1]==".") if x > 0 else False
-    right = not(sch[y][x+1].isdigit() or sch[y][x+1]==".") if x < x_max else False
-    up = not(sch[y-1][x].isdigit() or sch[y-1][x]==".") if y > 0 else False
-    down = not(sch[y+1][x].isdigit() or sch[y+1][x]==".") if y < y_max else False
+    symbol_found = False
+    adj_squares = [[-1,-1],[-1,0],[-1,1],[0,1],[1,1],[1,0],[1,-1],[0,-1]]
 
-    left_up = not(sch[y-1][x-1].isdigit() or sch[y-1][x-1]==".") if x > 0 and y > 0 else False
-    right_up = not(sch[y-1][x+1].isdigit() or sch[y-1][x+1]==".") if x < x_max and y > 0 else False
-    left_down = not(sch[y+1][x-1].isdigit() or sch[y+1][x-1]==".") if y < y_max and x > 0 else False
-    right_down = not(sch[y+1][x+1].isdigit() or sch[y+1][x+1]==".") if y < y_max and x < x_max else False
+    for sq in adj_squares:
+        y_val = y + sq[0]
+        x_val = x + sq[1]
+        if y_val >= 0 and x_val >= 0 and y_val < y_max and x_val < x_max:
+            symbol_found = not(sch[y_val][x_val].isdigit() or sch[y_val][x_val]==".") or symbol_found
 
-    return left or right or up or down or left_up or right_up or left_down or right_down
+    return symbol_found
 
 y = 0
 number_str = ""
