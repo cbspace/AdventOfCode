@@ -4,7 +4,19 @@ number_list = []
 run_list = []
 reached_blank = False
 
-part1_total = 0
+part1_total, part2_total = 0, 0
+
+def check_list(number_list, run):
+    success = True
+    error_a, error_b = 0, 0
+    for a,b in number_list:
+        if a in run and b in run:
+            a_index, b_index = run.index(a), run.index(b)
+            if not(a_index < b_index):
+                success = False
+                error_a, error_b = a_index, b_index
+                break
+    return success, error_a, error_b
 
 for line in file.readlines():
     line = line.strip()
@@ -14,20 +26,22 @@ for line in file.readlines():
         continue
 
     if not reached_blank:
-        number_list.append((line[:2], line[3:]))
+        number_list.append([int(line[:2]), int(line[3:])])
     else:
-        pages = line.split(',')
-        pages_dict = {x:i for i,x in enumerate(pages)}
-        pages_dict['middle'] = int(pages[len(pages)//2])
-        run_list.append(pages_dict)
+        run_list.append([int(x) for x in line.split(',')])
 
 for update in run_list:
-    success = True
-    for a,b in number_list:
-        if a in update and b in update:
-            if not update[a] < update[b]:
-                success = False
-    if success:
-        part1_total += update['middle']
+    update_ok, error_a, error_b = check_list(number_list, update)
+
+    if update_ok:
+        part1_total += update[len(update)//2]
+    else:
+        while not update_ok:
+            temp = update[error_a]
+            update[error_a] = update[error_b]
+            update[error_b] = temp
+            update_ok, error_a, error_b = check_list(number_list, update)
+        part2_total += update[len(update)//2]
 
 print(f'Part 1: {part1_total}')
+print(f'Part 2: {part2_total}')
