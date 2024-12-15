@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# Advent Of Code 2024 Day 6 by Craig Brennan
+# https://adventofcode.com/2024/day/6
+
 class MapGrid():
     def __init__(self, map_file):
         self.grid = []

@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# Advent Of Code 2024 Day 2 by Craig Brennan
+# https://adventofcode.com/2024/day/2
+
 from enum import Enum
 
 class Directions(Enum):

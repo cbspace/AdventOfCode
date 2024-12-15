@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# Advent Of Code 2024 Day 3 by Craig Brennan
+# https://adventofcode.com/2024/day/3
+
 file = open('input/day3_input.txt')
 buffer = file.read()
 

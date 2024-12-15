@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# Advent Of Code 2024 Day 5 by Craig Brennan
+# https://adventofcode.com/2024/day/5
+
 file = open('input/day5_input.txt')
 
 number_list = []

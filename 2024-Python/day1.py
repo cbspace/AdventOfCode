@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# Advent Of Code 2024 Day 1 by Craig Brennan
+# https://adventofcode.com/2024/day/1
+
 file = open('input/day1_input.txt')
 list1, list2 = [], []
 total1, total2 = 0, 0
