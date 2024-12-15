@@ -6,18 +6,16 @@ class MapGrid():
         self.guard_direction = None
         self.guard_codes = ['^', '>', 'v', '<']
         self.guard_delta = [[-1,0], [0,1], [1,0], [0,-1]]
-        
-        file = open(map_file)
 
-        for y, line in enumerate(file.readlines()):
-            self.grid.append(list(line.strip()))
-            for x, point in enumerate(line.strip()):
-                if point in self.guard_codes:
-                    self.guard_pos, self.initial_guard_pos = [y, x], [y, x]
-                    self.guard_direction = self.guard_codes.index(point)
-                    self.grid[y][x] = 'X'
+        for y, line in enumerate(map_file.split('\n')):
+            if len(line):
+                self.grid.append(list(line.strip()))
+                for x, point in enumerate(line.strip()):
+                    if point in self.guard_codes:
+                        self.guard_pos, self.initial_guard_pos = [y, x], [y, x]
+                        self.guard_direction = self.guard_codes.index(point)
+                        self.grid[y][x] = 'X'
 
-        file.close()
         self.y_len = len(self.grid)
         self.x_len = len(self.grid[0])
 
@@ -64,15 +62,14 @@ class MapGrid():
                 unique_pos = self.guard_pos
             elif unique_pos == self.guard_pos:
                 loop_found = True
-
         return loop_found
 
     def print_grid(self):
         for line in self.grid:
             print(''.join(line))
 
-filepath = 'input/day6_input.txt'
-grid = MapGrid(filepath)
+file_contents = open('input/day6_input.txt').read()
+grid = MapGrid(file_contents)
 
 in_grid = True
 while in_grid:
@@ -82,7 +79,7 @@ visited = grid.get_visited()
 loops_found = 0
 for location in visited:
     if location != grid.initial_guard_pos:
-        grid.__init__(filepath)
+        grid.__init__(file_contents)
         if grid.check_for_loop(location[0], location[1]):
             loops_found += 1
 
