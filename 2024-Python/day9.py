@@ -74,9 +74,8 @@ end_pointer = len(buffer) - 1
 
 end_pointer, length = find_end_blocks(buffer, 0, end_pointer, single=False)
 start_pointer = find_space(buffer, start_pointer, end_pointer, length)
-at = end_pointer
 
-while not at < 0:
+while end_pointer > -1:
     if start_pointer > -1:
         buffer[start_pointer:start_pointer+length] = buffer[end_pointer:end_pointer+length]
         buffer[end_pointer:end_pointer+length] = [-1] * length
@@ -84,7 +83,6 @@ while not at < 0:
     end_pointer, new_length = find_end_blocks(buffer, 0, end_pointer-1, single=False)
     start_pointer = find_space(buffer, 0, end_pointer-1, new_length)
     length = new_length
-    at = end_pointer
 
 part2_sum = 0
 for i,x in enumerate(buffer):
