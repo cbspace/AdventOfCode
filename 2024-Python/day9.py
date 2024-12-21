@@ -2,64 +2,99 @@
 # Advent Of Code 2024 Day 9 by Craig Brennan
 # https://adventofcode.com/2024/day/9
 
-data = open('input/day9_input.txt').read().strip()
-buffer = []
+def create_buffer(data):
+    buffer = []
+    number = 0
+    for i,block_val in enumerate(data):
+        is_free = i%2
+        for x in range(int(block_val)):
+            if is_free:
+                buffer.append(-1)
+            else:
+                buffer.append(number)
+        if not is_free: number += 1
+    return buffer
 
-number = 0
-for i,block_val in enumerate(data):
-    is_free = i%2
-    for x in range(int(block_val)):
-        if is_free:
-            buffer.append(-1)
+# Find contiguous blocks of length space starting from start_buffer
+def find_space(buffer, start_pointer, end_pointer, length=1):
+    not_at_end = lambda start, end : start <= end
+    counter = 0
+    
+    while not_at_end(start_pointer, end_pointer):
+        if buffer[start_pointer] == -1:
+            counter += 1
+            if counter == length:
+                return start_pointer - length + 1
+        else: 
+            counter = 0
+        start_pointer += 1
+
+    return -1
+
+def find_end_blocks(buffer, start_pointer, end_pointer, single=True):
+    not_at_start = lambda start, end : end >= start
+    start_number = buffer[end_pointer]
+    counter = 0
+
+    while start_number == -1 and not_at_start:
+        end_pointer -= 1 
+        start_number = buffer[end_pointer]
+
+    if single:
+        return end_pointer, 1
+
+    while not_at_start:
+        if buffer[end_pointer] != start_number:
+            return end_pointer + 1, counter
         else:
-            buffer.append(str(number))
-    if not is_free: number += 1
+            counter += 1
+        end_pointer -= 1
+    
+    return end_pointer, -1
 
+data = open('input/day9_input.txt').read().strip()
+
+# Part 1
+buffer = create_buffer(data)
 start_pointer = 0
 end_pointer = len(buffer) - 1
 
-def get_blocks(buffer,start_pointer, end_pointer):
-    at_end = False
-    
-    if start_pointer <= end_pointer:
-        start_block = buffer[start_pointer]
-        start_pointer += 1
-    else:
-        return True, start_pointer, end_pointer, ''
-
-    while start_block != -1:
-        if start_pointer <= end_pointer:
-            start_block = buffer[start_pointer]
-            start_pointer += 1
-        else:
-            at_end = True
-            break
-
-    if start_pointer <= end_pointer:
-        end_block = buffer[end_pointer]
-        end_pointer -= 1
-    else:
-        return True, start_pointer, end_pointer, ''
-
-    while end_block == -1:
-        if start_pointer <= end_pointer:
-            end_block = buffer[end_pointer]
-            end_pointer -= 1
-        else:
-            at_end = True
-            break
-
-    return at_end, start_pointer, end_pointer, end_block
-
-at_end, start_pointer, end_pointer, end_block = get_blocks(buffer, start_pointer, end_pointer)
-while not at_end:
-    buffer[start_pointer-1] = end_block
-    buffer[end_pointer+1] = -1
-    at_end, start_pointer, end_pointer, end_block = get_blocks(buffer, start_pointer, end_pointer)
+end_pointer, length = find_end_blocks(buffer, start_pointer, end_pointer)
+start_pointer = find_space(buffer, start_pointer, end_pointer)
+while start_pointer > -1 and end_pointer > -1:
+    buffer[start_pointer] = buffer[end_pointer]
+    buffer[end_pointer] = -1
+    end_pointer, length = find_end_blocks(buffer, start_pointer, end_pointer-1)
+    start_pointer = find_space(buffer, start_pointer, end_pointer-1)
 
 part1_sum = 0
-for i,block in enumerate(buffer):
-    if block != -1:
-        part1_sum += i * int(block)
+for i,x in enumerate(buffer):
+    if x != -1:
+        part1_sum += i * x
+
+# Part 2
+buffer = create_buffer(data)
+start_pointer = 0
+end_pointer = len(buffer) - 1
+
+end_pointer, length = find_end_blocks(buffer, 0, end_pointer, single=False)
+start_pointer = find_space(buffer, start_pointer, end_pointer, length)
+at = end_pointer
+
+while not at < 0:
+    if start_pointer > -1:
+        buffer[start_pointer:start_pointer+length] = buffer[end_pointer:end_pointer+length]
+        buffer[end_pointer:end_pointer+length] = [-1] * length
+
+    end_pointer, new_length = find_end_blocks(buffer, 0, end_pointer-1, single=False)
+    start_pointer = find_space(buffer, 0, end_pointer-1, new_length)
+    length = new_length
+    at = end_pointer
+
+part2_sum = 0
+for i,x in enumerate(buffer):
+    if x != -1:
+        part2_sum += i * x
 
 print(f'Part 1: {part1_sum}')
+print(f'Part 2: {part2_sum}')
