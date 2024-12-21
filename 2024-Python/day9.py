@@ -18,11 +18,9 @@ for i,block_val in enumerate(data):
 start_pointer = 0
 end_pointer = len(buffer) - 1
 
-print(buffer)
-
 def get_blocks(buffer,start_pointer, end_pointer):
     at_end = False
-    print(start_pointer, len(buffer), end_pointer)
+    
     if start_pointer <= end_pointer:
         start_block = buffer[start_pointer]
         start_pointer += 1
