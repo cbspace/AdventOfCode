@@ -17,10 +17,9 @@ def create_buffer(data):
 
 # Find contiguous blocks of length space starting from start_buffer
 def find_space(buffer, start_pointer, end_pointer, length=1):
-    not_at_end = lambda start, end : start <= end
     counter = 0
     
-    while not_at_end(start_pointer, end_pointer):
+    while start_pointer <= end_pointer:
         if buffer[start_pointer] == -1:
             counter += 1
             if counter == length:
@@ -32,25 +31,21 @@ def find_space(buffer, start_pointer, end_pointer, length=1):
     return -1
 
 def find_end_blocks(buffer, start_pointer, end_pointer, single=True):
-    not_at_start = lambda start, end : end >= start
     start_number = buffer[end_pointer]
     counter = 0
 
-    while start_number == -1 and not_at_start:
+    while start_number == -1:
         end_pointer -= 1 
         start_number = buffer[end_pointer]
 
     if single:
         return end_pointer, 1
 
-    while not_at_start:
-        if buffer[end_pointer] != start_number:
-            return end_pointer + 1, counter
-        else:
-            counter += 1
+    while buffer[end_pointer] == start_number:
+        counter += 1
         end_pointer -= 1
     
-    return end_pointer, -1
+    return end_pointer + 1, counter
 
 data = open('input/day9_input.txt').read().strip()
 
