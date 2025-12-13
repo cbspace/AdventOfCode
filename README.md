@@ -9,4 +9,5 @@ and each day has Part 1 and Part 2. It is a great way to learn new languages!
 - 2021 - Python
 - 2022 - C++
 - 2023 - Python
-
+- 2024 - Python
+- 2025 - Python
